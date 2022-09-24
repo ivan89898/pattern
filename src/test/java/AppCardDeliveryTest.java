@@ -1,4 +1,8 @@
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.selenide.AllureSelenide;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -13,11 +17,20 @@ public class AppCardDeliveryTest {
     private final int daysToAddForFirstMeeting = 4;
     private final String firstMeetingDate = DataGenerator.generateDate(daysToAddForFirstMeeting);
 
+    @BeforeAll
+    static void setUpAll() {
+        SelenideLogger.addListener("allure", new AllureSelenide());
+    }
+
+    @AfterAll
+    static void tearDownAll() {
+        SelenideLogger.removeListener("allure");
+    }
+
     @BeforeEach
     void setup() {
         open("http://localhost:9999");
     }
-
 
     @Test
     void shouldTestV3() {
@@ -52,6 +65,7 @@ public class AppCardDeliveryTest {
         $("[data-test-id=success-notification] .notification__content").shouldHave(Condition.exactText("Встреча успешно запланирована на " + secondMeetingDate));
 
     }
+
     @Test
     void shouldTestSameDate() {
         int daysToAddForSecondMeeting = 4;
@@ -77,69 +91,5 @@ public class AppCardDeliveryTest {
         $("[data-test-id=agreement]").click();
         $(By.xpath("//*[text()='Запланировать']")).click();
         $("[data-test-id=success-notification] .notification__content").shouldHave(Condition.exactText("Встреча успешно запланирована на " + secondMeetingDate));
-
     }
-
-    //  @Test
-    //  void shouldTestV4SameAll() {
-    //   $("[data-test-id=city] input").setValue("Екатеринбург");
-    //    $("[data-test-id=date] input.input__control").sendKeys(Keys.CONTROL + "a");
-    //   $("[data-test-id=date] input.input__control").sendKeys(Keys.DELETE);
-    //   $("[data-test-id=date] input.input__control").setValue(planningDate);
-    //   $("[data-test-id=name] input").setValue("Иван Иванович");
-    //   $("[data-test-id=phone] input").setValue("79999999667");
-    //   $("[data-test-id=agreement]").click();
-    //   $(By.xpath("//*[text()='Запланировать']")).click();
-    //   $("[data-test-id=success-notification]").shouldBe(Condition.visible, Duration.ofSeconds(15));
-    //  $("[data-test-id=success-notification]").shouldHave(Condition.text("Успешно!\n" +
-    //                 "Встреча успешно запланирована на " + planningDate), Duration.ofSeconds(15))
-    //       .shouldBe(Condition.visible);
-    // refresh();
-    //  $("[data-test-id=city] input").setValue("Екатеринбург");
-    //    $("[data-test-id=date] input.input__control").sendKeys(Keys.CONTROL + "a");
-    //$("[data-test-id=date] input.input__control").sendKeys(Keys.DELETE);
-    //  $("[data-test-id=date] input.input__control").setValue(planningDate);
-    //  $("[data-test-id=name] input").setValue("Иван Иванович");
-    //  $("[data-test-id=phone] input").setValue("79999999667");
-    //   $("[data-test-id=agreement]").click();
-    //  $(By.xpath("//*[text()='Запланировать']")).click();
-    //   $("[data-test-id=success-notification]").shouldBe(Condition.visible, Duration.ofSeconds(15));
-    //  $("[data-test-id=success-notification]").shouldHave(Condition.text("Успешно!\n" +
-    //              "Встреча успешно запланирована на " + planningDate), Duration.ofSeconds(15))
-    //     .shouldBe(Condition.visible);
-
-    // }
-
-    //@Test
-    // void shouldTestV5SameAllNewDate() {
-    //   $("[data-test-id=city] input").setValue("Екатеринбург");
-    //    $("[data-test-id=date] input.input__control").sendKeys(Keys.CONTROL + "a");
-    //     $("[data-test-id=date] input.input__control").sendKeys(Keys.DELETE);
-    //   $("[data-test-id=date] input.input__control").setValue(planningDate);
-    //   $("[data-test-id=name] input").setValue("Иван ван");
-    //   $("[data-test-id=phone] input").setValue("79555555533");
-    //  $("[data-test-id=agreement]").click();
-    //  $(By.xpath("//*[text()='Запланировать']")).click();
-    //  $("[data-test-id=success-notification]").shouldBe(Condition.visible, Duration.ofSeconds(15));
-    //  $("[data-test-id=success-notification]").shouldHave(Condition.text("Успешно!\n" +
-    //                 "Встреча успешно запланирована на " + planningDate), Duration.ofSeconds(15))
-    //      .shouldBe(Condition.visible);
-    // refresh();
-    //  $("[data-test-id=city] input").setValue("Екатеринбург");
-    // $("[data-test-id=date] input.input__control").sendKeys(Keys.CONTROL + "a");
-    // $("[data-test-id=date] input.input__control").sendKeys(Keys.DELETE);
-    // $("[data-test-id=date] input.input__control").setValue("25092022");
-    // $("[data-test-id=name] input").setValue("Иван ван");
-    //  $("[data-test-id=phone] input").setValue("79555555533");
-    // $("[data-test-id=agreement]").click();
-    //$(By.xpath("//*[text()='Запланировать']")).click();
-    // $("[data-test-id=replan-notification]").shouldBe(Condition.visible, Duration.ofSeconds(15));
-    //  $("[data-test-id=replan-notification]").shouldHave(Condition.text("Необходимо подтверждение\n" +
-    //                "У вас уже запланирована встреча на другую дату. Перепланировать?\n" +
-    //             "\n" +
-    //            "Перепланировать"), Duration.ofSeconds(15))
-    //    .shouldBe(Condition.visible);
-
-    //}
-
 }
